@@ -9,6 +9,8 @@ import { generateEmbedHtml } from '../../../../embed/generate-embed-html';
 import { animationFramePromise } from '../../util/promise-util';
 import { RecipientBadgeInstance } from '../../../recipient/models/recipient-badge.model';
 import { BadgeInstance } from '../../../issuer/models/badgeinstance.model';
+import { Router } from '@angular/router';
+import { AppConfigService } from '../../app-config.service';
 
 @Component({
 	selector: 'share-social-dialog',
@@ -21,9 +23,8 @@ export class ShareSocialDialog extends BaseDialog {
 	get currentShareUrl() {
 		const params = {};
 		params[`identity__${this.options.recipientType || 'email'}`] = this.options.recipientIdentifier;
-		return this.includeRecipientIdentifier
-			? addQueryParamsToUrl(this.options.shareUrl, params)
-			: this.options.shareUrl;
+		let url = this.maskShareURLToFront(this.options.shareUrl);
+		return this.includeRecipientIdentifier ? addQueryParamsToUrl(url, params) : url;
 	}
 
 	get hasEmbedSupport() {
@@ -53,7 +54,9 @@ export class ShareSocialDialog extends BaseDialog {
 		componentElem: ElementRef<HTMLElement>,
 		renderer: Renderer2,
 		private domSanitizer: DomSanitizer,
-		private sharingService: SharingService
+		private sharingService: SharingService,
+		private router: Router,
+		private configService: AppConfigService
 	) {
 		super(componentElem, renderer);
 
@@ -261,6 +264,14 @@ export class ShareSocialDialog extends BaseDialog {
 				iframe.style.height = iframeDocument.documentElement.scrollHeight + 'px';
 			}
 		}
+	}
+
+	// use frontend url instead of backend url
+	private maskShareURLToFront(url: string): string {
+		return url.replace(
+			this.configService.apiConfig.baseUrl,
+			window.location.toLocaleString().replace(this.router.url, '')
+		);
 	}
 }
 
