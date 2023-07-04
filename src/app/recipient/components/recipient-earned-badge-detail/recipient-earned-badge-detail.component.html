@@ -1,6 +1,29 @@
 <main *bgAwaitPromises="[badgesLoaded]" class="o-container">
 	<external-tool-launch></external-tool-launch>
 	<form-message></form-message>
+	<div class="info-top-bar" *ngIf="sourceUrl">
+		<div class="l-containerxaxis">
+			<div class="l-flex l-flex-wrap l-flex-1x l-flex-justifybetween l-flex-aligncenter">
+				<div class="l-flex l-flex-wrap l-flex-aligncenter">
+					<span contextinfo-x-messagetext="" class="u-text-body ng-star-inserted">
+						This Badge is hosted <strong class="u-text-bold">externally</strong></span
+					>
+				</div>
+				<div>
+					<a
+						contextinfo-x-actionlinks=""
+						target="_blank"
+						rel="noopener"
+						class="u-text-link u-text-outlink ng-star-inserted"
+						[href]="sourceUrl"
+					>
+						View Original</a
+					>
+				</div>
+			</div>
+			<!-- This badge is hosted externally -->
+		</div>
+	</div>
 	<div class="topbar">
 		<div class="l-containerxaxis">
 			<div class="topbar-x-breadcrumbs">

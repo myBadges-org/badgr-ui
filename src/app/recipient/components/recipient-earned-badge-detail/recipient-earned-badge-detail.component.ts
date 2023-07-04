@@ -27,6 +27,7 @@ import { Issuer } from '../../../issuer/models/issuer.model';
 @Component({
 	selector: 'recipient-earned-badge-detail',
 	templateUrl: './recipient-earned-badge-detail.component.html',
+	styleUrls: ['./recipient-earned-badge-detail.component.css'],
 })
 export class RecipientEarnedBadgeDetailComponent extends BaseAuthenticatedRoutableComponent implements OnInit {
 	readonly issuerImagePlacholderUrl = preloadImageURL(
@@ -43,6 +44,7 @@ export class RecipientEarnedBadgeDetailComponent extends BaseAuthenticatedRoutab
 	badge: RecipientBadgeInstance;
 	issuerBadgeCount: string;
 	launchpoints: ApiExternalToolLaunchpoint[];
+	sourceUrl: string = '';
 
 	now = new Date();
 	compareDate = compareDate;
@@ -202,12 +204,21 @@ export class RecipientEarnedBadgeDetailComponent extends BaseAuthenticatedRoutab
 			return count === 1 ? '1 Badge' : `${count} Badges`;
 		};
 		this.issuerBadgeCount = issuerBadgeCount();
+
+		this.sourceUrl = this.checkIfIdIsOwn(this.badge.id);
 	}
 
 	private clickLaunchpoint(launchpoint: ApiExternalToolLaunchpoint) {
 		this.externalToolsManager.getLaunchInfo(launchpoint, this.badgeSlug).then((launchInfo) => {
 			this.eventService.externalToolLaunch.next(launchInfo);
 		});
+	}
+
+	private checkIfIdIsOwn(id: string) {
+		if (id.includes(this.configService.apiConfig.baseUrl)) {
+			return '';
+		}
+		return id;
 	}
 
 	exportPdf() {
