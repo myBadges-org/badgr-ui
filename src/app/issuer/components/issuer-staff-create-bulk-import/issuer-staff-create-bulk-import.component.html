@@ -1,0 +1,45 @@
+<section class="l-containerxaxis l-containeryaxis">
+	<div class="u-width-form">
+		<article class="contentlong">
+			<h2>Anleitung</h2>
+			<p>
+				Du kannst eine Liste von Mitglieder*innen importieren welche einer Institution inzugefügt werden sollen.
+				Die Datei muss im CSV oder TXT Format sein und sowohl die E-Mail Addressen als auch entsprechenden
+				Rollen der Mitglieder beinhalten.
+			</p>
+			<p>
+				Benutze diese
+				<a [href]="badgrBulkMembersTemplateUrl" download="badgr-bulk-members-template.csv">
+					Beispiel Vorlage
+				</a>
+				um eine CSV oder TXT Datei zu erstellen
+			</p>
+		</article>
+		<form [formGroup]="csvForm" class>
+			<fieldset>
+				<bg-formfield-file
+					#fileField
+					label="File"
+					validFileTypes="text/plain,.csv"
+					[control]="csvForm.controls['zipFile']"
+					[placeholderImage]="csvUploadIconUrl"
+					(fileData)="onFileDataReceived($event)"
+				>
+				</bg-formfield-file>
+			</fieldset>
+		</form>
+
+		<div class="l-flex l-flex-1x u-margin-top2x">
+			<button class="button button-secondary" (click)="updateViewState('cancel')">Abbrechen</button>
+
+			<button
+				class="button l-marginLeft-x2"
+				[class.button-is-disabled]="rawCsv === null"
+				[attr.disabled]="rawCsv ? null : true"
+				(click)="importAction()"
+			>
+				Importieren
+			</button>
+		</div>
+	</div>
+</section>

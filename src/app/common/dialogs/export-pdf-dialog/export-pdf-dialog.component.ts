@@ -112,7 +112,6 @@ export class ExportPdfDialog extends BaseDialog {
 			if (!this.profile) {
 				await this.profileManager.userProfilePromise.then(
 					(profile) => {
-						debugger;
 						this.profile = profile;
 						this.emailsLoaded = profile.emails.loadedPromise;
 					},

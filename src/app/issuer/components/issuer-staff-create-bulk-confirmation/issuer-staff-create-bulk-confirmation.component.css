@@ -1,0 +1,11 @@
+.members-table-container {
+	display: block;
+	overflow-x: auto;
+	max-height: 22vh;
+}
+
+.members-table-container-thead {
+	position: sticky;
+	top: 0px;
+	z-index: 1;
+}
