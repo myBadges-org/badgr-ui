@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../../common/services/session.service';
 import { MessageService } from '../../../common/services/message.service';
-import { Title } from '@angular/platform-browser';
 import { BaseAuthenticatedRoutableComponent } from '../../../common/pages/base-authenticated-routable.component';
 
 import { ColumnHeaders } from '../badgeclass-issue-bulk-award/badgeclass-issue-bulk-award.component';
@@ -36,8 +35,7 @@ export class IssuerStaffCreateBulkImportComponent extends BaseAuthenticatedRouta
 		protected loginService: SessionService,
 		protected messageService: MessageService,
 		protected router: Router,
-		protected route: ActivatedRoute,
-		protected title: Title
+		protected route: ActivatedRoute
 	) {
 		super(router, route, loginService);
 

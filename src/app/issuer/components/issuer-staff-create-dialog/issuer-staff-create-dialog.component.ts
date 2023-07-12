@@ -94,6 +94,7 @@ export class IssuerStaffCreateDialogComponent extends BaseDialog {
 
 	updateViewState(state: ViewState) {
 		if (state === 'cancel' || state === 'exit') {
+			this.updateViewState('import');
 			this.closeDialog();
 			return;
 		}

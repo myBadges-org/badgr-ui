@@ -1,14 +1,10 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../../common/services/session.service';
 import { MessageService } from '../../../common/services/message.service';
-import { Title } from '@angular/platform-browser';
 import { BaseAuthenticatedRoutableComponent } from '../../../common/pages/base-authenticated-routable.component';
 import { TransformedImportData, ViewState } from '../issuer-staff-create-dialog/issuer-staff-create-dialog.component';
 
-import { BadgeInstanceManager } from '../../services/badgeinstance-manager.service';
-import { BadgeInstanceBatchAssertion } from '../../models/badgeinstance-api.model';
 import { BadgrApiFailure } from '../../../common/services/api-failure';
 import { Issuer } from '../../models/issuer.model';
 import { IssuerManager } from '../../services/issuer-manager.service';
@@ -27,20 +23,14 @@ export class IssuerStaffCreateBulkConfirmation extends BaseAuthenticatedRoutable
 	buttonDisabledAttribute = true;
 	issuer: Issuer;
 	issuerLoaded: Promise<Issuer>;
-	notifyEarner = true;
 	error: string = null;
 
-	issueBadgeFinished: Promise<unknown>;
-
 	constructor(
-		protected badgeInstanceManager: BadgeInstanceManager,
 		protected sessionService: SessionService,
 		protected router: Router,
 		protected route: ActivatedRoute,
 		protected messageService: MessageService,
-		protected formBuilder: FormBuilder,
-		protected issuerManager: IssuerManager,
-		protected title: Title
+		protected issuerManager: IssuerManager
 	) {
 		super(router, route, sessionService);
 		this.enableActionButton();

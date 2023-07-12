@@ -3,7 +3,6 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService } from '../../../common/services/session.service';
 import { MessageService } from '../../../common/services/message.service';
-import { Title } from '@angular/platform-browser';
 import { BaseAuthenticatedRoutableComponent } from '../../../common/pages/base-authenticated-routable.component';
 import { EmailValidator } from '../../../common/validators/email.validator';
 import { TransformedImportData, ViewState } from '../issuer-staff-create-dialog/issuer-staff-create-dialog.component';
@@ -25,8 +24,7 @@ export class IssuerStaffCreateBulkError extends BaseAuthenticatedRoutableCompone
 		protected sessionService: SessionService,
 		protected messageService: MessageService,
 		protected router: Router,
-		protected route: ActivatedRoute,
-		protected title: Title
+		protected route: ActivatedRoute
 	) {
 		super(router, route, sessionService);
 	}
