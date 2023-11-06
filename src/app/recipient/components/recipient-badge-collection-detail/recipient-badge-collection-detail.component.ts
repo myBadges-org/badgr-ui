@@ -113,7 +113,7 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 							this.messageService.reportMinorSuccess(`Sammlung '${this.collection.name}' wurde gelöscht`);
 							this.router.navigate(['/recipient/badge-collections']);
 						},
-						(error) => this.messageService.reportHandledError(`Fehler beim Löoschen der Sammlung`, error)
+						(error) => this.messageService.reportHandledError(`Fehler beim Löschen der Sammlung`, error)
 					);
 				},
 				() => {}
@@ -147,6 +147,22 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 			);
 	}
 
+	cantExportPDFWhenPrivate() {
+		this.dialogService.confirmDialog
+			.openResolveRejectDialog({
+				dialogTitle: 'Veröffentlichen Um Als PDF Zu Exportieren',
+				dialogBody: `Um die Sammlung '${this.collection.name}' als PDF zu exportieren muss diese öffentlich sein. Soll die Sammlung veröffentlich werden?`,
+				resolveButtonLabel: 'Sammlung Veröffentlichen',
+				rejectButtonLabel: 'Abbrechen',
+			})
+			.then(
+				() => {
+					this.collectionPublished = true;
+				},
+				() => {}
+			);
+	}
+
 	get badgesInCollectionCount(): string {
 		return `${this.collection.badgeEntries.length} ${
 			this.collection.badgeEntries.length === 1 ? 'Badge' : 'Badges'
@@ -159,6 +175,7 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 
 	set collectionPublished(published: boolean) {
 		this.collection.published = published;
+		debugger;
 
 		if (published) {
 			this.collection.save().then(

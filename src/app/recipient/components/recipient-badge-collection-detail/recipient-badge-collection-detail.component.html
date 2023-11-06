@@ -54,7 +54,7 @@
 							</button>
 							<button
 								class="menuitem"
-								(click)="exportPdf()"
+								(click)="!collection?.published ? cantExportPDFWhenPrivate() : exportPdf()"
 								loading-message="Loading badge..."
 								[disabled-when-requesting]="true"
 							>
