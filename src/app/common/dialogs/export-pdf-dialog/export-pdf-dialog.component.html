@@ -6,7 +6,8 @@
 >
 	<div class="dialog-x-box o-container">
 		<div class="dialog-x-header u-background-light3">
-			<h1>Badge exportieren</h1>
+			<h1 *ngIf="modalType == 'collection'">Sammlung exportieren</h1>
+			<h1 *ngIf="modalType == 'badge'">Badge exportieren</h1>
 			<button (click)="closeDialog()" class="buttonicon buttonicon-link">
 				<svg icon="icon_close"></svg>
 				<span class="visuallyhidden">Close</span>

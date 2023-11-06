@@ -44,7 +44,7 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 	) {
 		super(router, route, loginService);
 
-		title.setTitle(`Collections - ${this.configService.theme['serviceName'] || 'Badgr'}`);
+		title.setTitle(`Sammlungen - ${this.configService.theme['serviceName'] || 'Badgr'}`);
 
 		this.collectionLoadedPromise = Promise.all([
 			this.recipientBadgeCollectionManager.recipientBadgeCollectionList.loadedPromise,
@@ -53,7 +53,7 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 			.then(([list]) => {
 				this.collection = list.entityForSlug(this.collectionSlug);
 				this.crumbs = [
-					{ title: 'Collections', routerLink: ['/recipient/badge-collections'] },
+					{ title: 'Sammlungen', routerLink: ['/recipient/badge-collections'] },
 					{ title: this.collection.name, routerLink: ['/collection/' + this.collection.slug] },
 				];
 				return this.collection;
@@ -61,7 +61,9 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 			.then((collection) => collection.badgesPromise)
 			.catch((err) => {
 				router.navigate(['/']);
-				return this.messageService.reportHandledError(`Failed to load collection ${this.collectionSlug}`);
+				return this.messageService.reportHandledError(
+					`Fehler beim Laden der Sammlung '${this.collectionSlug}'`
+				);
 			});
 	}
 
@@ -77,7 +79,7 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 		this.recipientBadgeDialog
 			.openDialog({
 				dialogId: 'manage-collection-badges',
-				dialogTitle: 'Add Badges',
+				dialogTitle: 'Badge Hinzufügen',
 				multiSelectMode: true,
 				restrictToIssuerId: null,
 				omittedCollection: this.collection.badges,
@@ -90,10 +92,8 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 				this.collection.updateBadges(badgeCollection);
 				this.collection.save().then(
 					(success) =>
-						this.messageService.reportMinorSuccess(
-							`Collection ${this.collection.name} badges saved successfully`
-						),
-					(failure) => this.messageService.reportHandledError(`Failed to save Collection`, failure)
+						this.messageService.reportMinorSuccess(`Sammlung '${this.collection.name}' gespeichert`),
+					(failure) => this.messageService.reportHandledError(`Fehler beim Speichern der Sammlung`, failure)
 				);
 			});
 	}
@@ -101,19 +101,19 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 	deleteCollection() {
 		this.dialogService.confirmDialog
 			.openResolveRejectDialog({
-				dialogTitle: 'Delete Collection',
-				dialogBody: `Are you sure you want to delete collection ${this.collection.name}?`,
-				resolveButtonLabel: 'Delete Collection',
-				rejectButtonLabel: 'Cancel',
+				dialogTitle: 'Sammlung Löschen',
+				dialogBody: `Soll die Sammlung '${this.collection.name}' wirklich gelöscht werden?`,
+				resolveButtonLabel: 'Sammlung Löschen',
+				rejectButtonLabel: 'Abbrechen',
 			})
 			.then(
 				() => {
 					this.collection.deleteCollection().then(
 						() => {
-							this.messageService.reportMinorSuccess(`Deleted collection '${this.collection.name}'`);
+							this.messageService.reportMinorSuccess(`Sammlung '${this.collection.name}' wurde gelöscht`);
 							this.router.navigate(['/recipient/badge-collections']);
 						},
-						(error) => this.messageService.reportHandledError(`Failed to delete collection`, error)
+						(error) => this.messageService.reportHandledError(`Fehler beim Löoschen der Sammlung`, error)
 					);
 				},
 				() => {}
@@ -123,10 +123,10 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 	removeEntry(entry: RecipientBadgeCollectionEntry) {
 		this.dialogService.confirmDialog
 			.openResolveRejectDialog({
-				dialogTitle: 'Confirm Remove',
-				dialogBody: `Are you sure you want to remove ${entry.badge.badgeClass.name} from ${this.collection.name}?`,
-				rejectButtonLabel: 'Cancel',
-				resolveButtonLabel: 'Remove Badge',
+				dialogTitle: 'Badge Entfernen',
+				dialogBody: `Soll die Badge '${entry.badge.badgeClass.name}' wirklich aus der Sammlung '${this.collection.name}' entfernt werden?`,
+				rejectButtonLabel: 'Abbrechen',
+				resolveButtonLabel: 'Badge Entfernen',
 			})
 			.then(
 				() => {
@@ -134,11 +134,11 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 					this.collection.save().then(
 						(success) =>
 							this.messageService.reportMinorSuccess(
-								`Removed badge ${entry.badge.badgeClass.name} from collection ${this.collection.name} successfully`
+								`Badge '${entry.badge.badgeClass.name}' wurde aus der Sammlung '${this.collection.name}' entfernt.`
 							),
 						(failure) =>
 							this.messageService.reportHandledError(
-								`Failed to remove badge ${entry.badge.badgeClass.name} from collection ${this.collection.name}`,
+								`Fehler beim Entfernen der Badge '${entry.badge.badgeClass.name}' aus der Sammlung '${this.collection.name}'`,
 								failure
 							)
 					);
@@ -163,10 +163,10 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 		if (published) {
 			this.collection.save().then(
 				(success) =>
-					this.messageService.reportMinorSuccess(`Published collection ${this.collection.name} successfully`),
+					this.messageService.reportMinorSuccess(`Sammlung '${this.collection.name}' wurde veröffentlicht`),
 				(failure) =>
 					this.messageService.reportHandledError(
-						`Failed to publish collection ${this.collection.name}`,
+						`Fehler beim Veröffentlichen der Sammlung '${this.collection.name}'`,
 						failure
 					)
 			);
@@ -174,11 +174,11 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 			this.collection.save().then(
 				(success) =>
 					this.messageService.reportMinorSuccess(
-						`Unpublished collection ${this.collection.name} successfully`
+						`Veröffentlichung der Sammlung '${this.collection.name}' wurde aufgehoben`
 					),
 				(failure) =>
 					this.messageService.reportHandledError(
-						`Failed to un-publish collection ${this.collection.name}`,
+						`Fehler beim Zurücknehmen der Veröffentlichung der Sammlung '${this.collection.name}'`,
 						failure
 					)
 			);
@@ -198,7 +198,7 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 
 export function shareCollectionDialogOptionsFor(collection: RecipientBadgeCollection): ShareSocialDialogOptions {
 	return {
-		title: 'Share Collection',
+		title: 'Sammlung Teilen',
 		shareObjectType: 'BadgeCollection',
 		shareUrl: collection.shareUrl,
 		shareTitle: collection.name,

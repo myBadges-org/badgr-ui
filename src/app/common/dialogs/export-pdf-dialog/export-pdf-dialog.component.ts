@@ -28,6 +28,7 @@ export class ExportPdfDialog extends BaseDialog {
 
 	profile: UserProfile;
 	emailsLoaded: Promise<unknown>;
+	modalType: 'badge' | 'collection' = 'badge';
 
 	imageLoader: (file: File | string) => Promise<string> = basicImageLoader;
 
@@ -59,6 +60,7 @@ export class ExportPdfDialog extends BaseDialog {
 	}
 
 	async openDialog(badge: RecipientBadgeInstance, markdown: HTMLElement): Promise<void> {
+		this.modalType = 'badge';
 		this.badge = badge;
 		this.showModal();
 
@@ -71,6 +73,7 @@ export class ExportPdfDialog extends BaseDialog {
 	}
 
 	async openDialogForCollections(collection: RecipientBadgeCollection): Promise<void> {
+		this.modalType = 'collection';
 		this.collection = collection;
 		this.showModal();
 
@@ -115,7 +118,6 @@ export class ExportPdfDialog extends BaseDialog {
 			if (!this.profile) {
 				await this.profileManager.userProfilePromise.then(
 					(profile) => {
-						debugger;
 						this.profile = profile;
 						this.emailsLoaded = profile.emails.loadedPromise;
 					},
@@ -418,13 +420,14 @@ export class ExportPdfDialog extends BaseDialog {
 				this.doc.setFontSize(19);
 				this.doc.setFont('Helvetica', 'bold');
 				this.doc.setTextColor(0, 0, 0);
-				this.doc.text('Collection', xMargin, yPos, {
+				this.doc.text('Sammlung', xMargin, yPos, {
 					align: 'left',
 				});
 				let badgeText = '';
 				if (badges.length / badgesOnPage > 1) {
 					badgeText +=
 						i * badgesOnPage +
+						1 +
 						' bis ' +
 						Math.min(badges.length, (i + 1) * badgesOnPage) +
 						' von ' +
