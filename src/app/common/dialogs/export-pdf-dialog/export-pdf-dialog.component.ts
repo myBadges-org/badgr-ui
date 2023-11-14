@@ -349,7 +349,7 @@ export class ExportPdfDialog extends BaseDialog {
 		const badges: RecipientBadgeInstance[] = collection.badges;
 		this.doc = new jsPDF();
 
-		let badgesOnPage = 9;
+		let badgesOnPage = 13;
 
 		let yPos;
 		let xMargin;
@@ -359,16 +359,16 @@ export class ExportPdfDialog extends BaseDialog {
 				if (i > 0) {
 					this.doc.addPage();
 				}
-				yPos = 15;
+				yPos = 13;
 				xMargin = 10;
 				const pageWidth = this.doc.internal.pageSize.getWidth();
 				const pageHeight = this.doc.internal.pageSize.getHeight();
-				const titleRectHeight = 53;
+				const titleRectHeight = 58;
 				let cutoff = pageWidth - 15;
 				this.doc.setFillColor(this.themeColor);
 				this.doc.rect(0, 0, pageWidth, titleRectHeight, 'F');
 				// title
-				this.doc.setFontSize(30);
+				this.doc.setFontSize(25);
 				this.doc.setFont('Helvetica', 'bold');
 				this.doc.setTextColor(255, 255, 255);
 				let title = this.doc.splitTextToSize(collection.name, cutoff - this.doc.getTextWidth('...'));
@@ -383,7 +383,7 @@ export class ExportPdfDialog extends BaseDialog {
 				for (let k = 0; k < maxTitleRows; k = k + 1) {
 					if (title[k]) {
 						if (k > 0) {
-							yPos += 15;
+							yPos += 11;
 						}
 						this.doc.text(title[k], xMargin, yPos, {
 							align: 'justify',
@@ -393,8 +393,8 @@ export class ExportPdfDialog extends BaseDialog {
 				yPos += titlePadding;
 
 				// subtitle
-				// yPos += 7;
-				this.doc.setFontSize(21);
+				yPos += 2;
+				this.doc.setFontSize(19);
 				this.doc.setFont('Helvetica', 'normal');
 				let subtitle = this.doc.splitTextToSize(collection.description, cutoff - this.doc.getTextWidth('...'));
 				let subtitlePadding = 0;
@@ -407,17 +407,51 @@ export class ExportPdfDialog extends BaseDialog {
 				}
 				for (let k = 0; k < maxSubtitleRows; k = k + 1) {
 					if (subtitle[k]) {
-						yPos += 10;
+						yPos += 8;
 						this.doc.text(subtitle[k], xMargin, yPos, {
 							align: 'justify',
 						});
 					}
 				}
+				yPos += subtitlePadding;
+
+				// received by
+				yPos += 11;
+				this.doc.setFontSize(15);
+				this.doc.setFont('Helvetica', 'normal');
+				let name = '';
+				debugger;
+				if (
+					this.profile &&
+					((this.profile.firstName && this.profile.firstName.length > 0) ||
+						(this.profile.lastName && this.profile.lastName.length > 0))
+				) {
+					if (this.profile.firstName) {
+						name += this.profile.firstName + ' ';
+					}
+					if (this.profile.lastName) {
+						name += this.profile.lastName;
+					}
+				} else {
+					name = this.profile.emails.entities[0].email;
+				}
+				name = this.doc.splitTextToSize(name, cutoff - this.doc.getTextWidth('...') - 59);
+				// let nameLength = this.doc.getTextWidth(name[0]);
+				let namePreText = 'Diese Sammlung gehört';
+				let namePreTextLength = this.doc.getTextWidth(namePreText);
+				this.doc.text(namePreText, xMargin, yPos, {
+					align: 'left',
+				});
+				this.doc.setFontSize(15);
+				this.doc.setFont('Helvetica', 'bold');
+				this.doc.text(name[0], xMargin + namePreTextLength + 2, yPos, {
+					align: 'left',
+				});
 				yPos = titleRectHeight;
 
 				// Badges table title
-				yPos += 10;
-				this.doc.setFontSize(19);
+				yPos += 7;
+				this.doc.setFontSize(14);
 				this.doc.setFont('Helvetica', 'bold');
 				this.doc.setTextColor(0, 0, 0);
 				this.doc.text('Sammlung', xMargin, yPos, {
@@ -443,18 +477,18 @@ export class ExportPdfDialog extends BaseDialog {
 				this.doc.text(badgeText, pageWidth - xMargin, yPos, {
 					align: 'right',
 				});
-				this.doc.line(xMargin, yPos + 3, pageWidth - xMargin, yPos + 3);
+				this.doc.line(xMargin, yPos + 1.8, pageWidth - xMargin, yPos + 1.8);
 
 				// Badges table content
-				yPos += 14;
+				yPos += 11;
 				for (let j = 0 + badgesOnPage * i; j < Math.min(badges.length, badgesOnPage * (i + 1)); j++) {
 					let badge = badges[j];
 					// title
-					this.doc.setFontSize(22);
+					this.doc.setFontSize(20);
 					this.doc.setFont('Helvetica', 'bold');
 					let badgeClass = badge.badgeClass;
 					let xPos = xMargin;
-					this.doc.addImage(badgeClass.image, 'png', xPos, yPos - 7, 18, 18);
+					this.doc.addImage(badgeClass.image, 'png', xPos, yPos - 7, 13.5, 13.5);
 					xPos += 20;
 					let name = badgeClass.name;
 					let nameSplit = this.doc.splitTextToSize(name, cutoff - this.doc.getTextWidth('...') - 20 - 20);
@@ -464,12 +498,12 @@ export class ExportPdfDialog extends BaseDialog {
 					this.doc.text(nameSplit[0], xPos, yPos, {
 						align: 'justify',
 					});
-					yPos += 9;
+					yPos += 5;
 					// institution
-					this.doc.setFontSize(14);
+					this.doc.setFontSize(13);
 					this.doc.setFont('Helvetica', 'normal');
 					let institution = badgeClass.issuer.name;
-					if (this.doc.getTextWidth(institution) > cutoff - this.doc.getTextWidth('...') - 15 - 50) {
+					if (this.doc.getTextWidth(institution) > cutoff - this.doc.getTextWidth('...') - 15 - 38) {
 						// while(this.doc.getTextWidth(institution) > 30) {
 						// 	institution = institution.substring(0, institution.length - 1);
 						// }
@@ -477,7 +511,7 @@ export class ExportPdfDialog extends BaseDialog {
 							0,
 							institution.length -
 								(this.doc.getTextWidth(institution) -
-									(cutoff - this.doc.getTextWidth('...') - 15 - 50)) /
+									(cutoff - this.doc.getTextWidth('...') - 15 - 38)) /
 									2
 						);
 						institution += '...';
@@ -494,7 +528,7 @@ export class ExportPdfDialog extends BaseDialog {
 					this.doc.text(datum, pageWidth - xMargin, yPos, {
 						align: 'right',
 					});
-					yPos += 13;
+					yPos += 10.5;
 				}
 
 				// logo
