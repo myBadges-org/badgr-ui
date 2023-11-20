@@ -533,33 +533,35 @@ export class ExportPdfDialog extends BaseDialog {
 
 				// QR code
 				yPos = pageHeight - 25;
-				const logoWidth = 15;
-				const logoHeight = 15;
+				const qrWidth = 25;
+				const qrHeight = 25;
 				this.doc.setFontSize(14);
 				this.doc.setFont('Helvetica', 'normal');
 				const marginXImageLogo = pageWidth / 4;
-				QRCode.toDataURL('sample text', (error, url) => {
+				QRCode.toDataURL(collection.shareUrl, (error, url) => {
 					if (error) console.error(error);
 					console.log(url);
-					this.doc.addImage(url, 'png', marginXImageLogo - logoWidth / 2, yPos, logoWidth, logoHeight);
+					this.doc.addImage(url, 'png', marginXImageLogo - qrWidth / 2, yPos, qrWidth, qrHeight);
 				});
 
 				// logo
+				const logoWidth = 15;
+				const logoHeight = 15;
 				var img = new Image();
 				img.src = 'assets/logos/Badges_Entwurf-15.png';
 				this.doc.addImage(img, 'PNG', marginXImageLogo * 3 - logoWidth / 2, yPos, logoWidth, logoHeight);
 
 				// QR code text
 				yPos += 10;
-				let qrTextOnContentLength = this.doc.getTextWidth('verifiziere die Sammlung');
-				this.doc.text(
-					'verifiziere die Sammlung',
-					marginXImageLogo - qrTextOnContentLength / 2,
-					yPos + (logoHeight * 2) / 3,
-					{
-						align: 'left',
-					}
-				);
+				// let qrTextOnContentLength = this.doc.getTextWidth('verifiziere die Sammlung');
+				// this.doc.text(
+				// 	'verifiziere die Sammlung',
+				// 	marginXImageLogo - qrTextOnContentLength / 2,
+				// 	yPos + (logoHeight * 2) / 3,
+				// 	{
+				// 		align: 'left',
+				// 	}
+				// );
 
 				// Logo text
 				let logoTextOnContentLength = this.doc.getTextWidth('bereitgestellt von mybadges.org');
