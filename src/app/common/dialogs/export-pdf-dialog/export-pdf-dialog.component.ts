@@ -541,7 +541,7 @@ export class ExportPdfDialog extends BaseDialog {
 				QRCode.toDataURL(collection.shareUrl, (error, url) => {
 					if (error) console.error(error);
 					console.log(url);
-					this.doc.addImage(url, 'png', marginXImageLogo - qrWidth / 2, yPos, qrWidth, qrHeight);
+					this.doc.addImage(url, 'png', pageWidth - qrWidth - 1, yPos - 1, qrWidth, qrHeight);
 				});
 
 				// logo
@@ -549,7 +549,7 @@ export class ExportPdfDialog extends BaseDialog {
 				const logoHeight = 15;
 				var img = new Image();
 				img.src = 'assets/logos/Badges_Entwurf-15.png';
-				this.doc.addImage(img, 'PNG', marginXImageLogo * 3 - logoWidth / 2, yPos, logoWidth, logoHeight);
+				this.doc.addImage(img, 'PNG', marginXImageLogo * 2 - logoWidth / 2, yPos, logoWidth, logoHeight);
 
 				// QR code text
 				yPos += 10;
@@ -567,7 +567,7 @@ export class ExportPdfDialog extends BaseDialog {
 				let logoTextOnContentLength = this.doc.getTextWidth('bereitgestellt von mybadges.org');
 				this.doc.textWithLink(
 					'bereitgestellt von mybadges.org',
-					marginXImageLogo * 3 - logoTextOnContentLength / 2,
+					marginXImageLogo * 2 - logoTextOnContentLength / 2,
 					yPos + (logoHeight * 2) / 3,
 					{
 						url: 'https://mybadges.org/public/start',
