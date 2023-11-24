@@ -54,6 +54,7 @@
 		"marked": "^0.6.2",
 		"popper.js": "^1.15.0",
 		"postcss-cssnext": "3.1.0",
+		"qrcode": "^1.5.3",
 		"rxjs": "^6.6.7",
 		"sanitize-html": "^1.20.1",
 		"striptags": "^3.1.1",

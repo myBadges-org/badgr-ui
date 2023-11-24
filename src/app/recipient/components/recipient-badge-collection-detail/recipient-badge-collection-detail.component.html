@@ -52,12 +52,14 @@
 								<svg icon="icon_edit"></svg>
 								Bearbeiten
 							</button>
-							<!-- <button
+							<button
 								class="menuitem"
-								(click)="exportPdf()"
+								(click)="!collection?.published ? cantExportPDFWhenPrivate() : exportPdf()"
 								loading-message="Loading badge..."
 								[disabled-when-requesting]="true"
-								><svg icon="icon_file"></svg>Export to PDF</button> -->
+							>
+								<svg icon="icon_file"></svg>Als PDF exportieren
+							</button>
 							<button class="menuitem" routerLinkActive="menuitem-is-active" (click)="deleteCollection()">
 								<svg icon="icon_remove"></svg>
 								Löschen
