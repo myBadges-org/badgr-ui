@@ -175,7 +175,6 @@ export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRo
 
 	set collectionPublished(published: boolean) {
 		this.collection.published = published;
-		debugger;
 
 		if (published) {
 			this.collection.save().then(
