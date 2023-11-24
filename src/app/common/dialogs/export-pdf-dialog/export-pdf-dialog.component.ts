@@ -540,7 +540,6 @@ export class ExportPdfDialog extends BaseDialog {
 				const marginXImageLogo = pageWidth / 4;
 				QRCode.toDataURL(collection.shareUrl, (error, url) => {
 					if (error) console.error(error);
-					console.log(url);
 					this.doc.addImage(url, 'png', pageWidth - qrWidth - 1, yPos - 1, qrWidth, qrHeight);
 				});
 
