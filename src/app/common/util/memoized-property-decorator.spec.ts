@@ -1,12 +1,11 @@
-import { async } from '@angular/core/testing';
-import {MemoizedProperty} from './memoized-property-decorator';
-import {Directive} from '@angular/core';
+import { waitForAsync } from '@angular/core/testing';
+import { MemoizedProperty } from './memoized-property-decorator';
+import { Directive } from '@angular/core';
 
 xdescribe('My Test', () => {
-  let service;
+	let service;
 
-  beforeEach(() => {
-    // TODO
-  });
-
+	beforeEach(() => {
+		// TODO
+	});
 });

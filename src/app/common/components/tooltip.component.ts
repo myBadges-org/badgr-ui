@@ -1,23 +1,15 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, OnDestroy, ViewChild } from '@angular/core';
 
 import * as Tether from 'tether';
 
 @Component({
 	selector: 'tooltip',
 	template: `
-		<span #anchor
-		      (click)="toggleTip()"
-		><ng-content select=".trigger"></ng-content></span>
-		<div #tooltip
-		     class="tooltip"
-		     [ngClass]="{'tooltip-is-active':active}"
-		>
+		<span #anchor (click)="toggleTip()"><ng-content select=".trigger"></ng-content></span>
+		<div #tooltip class="tooltip" [ngClass]="{ 'tooltip-is-active': active }">
 			<span class="tooltip-x-arrow"></span>
 			<div class="tooltip-x-content">
-				<button type="button"
-				        (click)="updateTip(false)"
-				>Close
-				</button>
+				<button type="button" (click)="updateTip(false)">Close</button>
 				<ng-content select="header"></ng-content>
 				<ng-content select="content"></ng-content>
 				<ng-content select="footer"></ng-content>
@@ -25,16 +17,15 @@ import * as Tether from 'tether';
 		</div>
 	`,
 })
-
 export class TooltipComponent implements AfterViewInit, OnDestroy {
 	@Input() position = {
 		attachment: 'bottom left',
-		targetAttachment: 'middle right'
+		targetAttachment: 'middle right',
 	};
 	@Input() offset = '-30px -15px';
 	@Input() trigger;
-	@ViewChild('anchor', {static: false}) anchor: ElementRef;
-	@ViewChild('tooltip', {static: false}) tooltip: ElementRef;
+	@ViewChild('anchor') anchor: ElementRef;
+	@ViewChild('tooltip') tooltip: ElementRef;
 
 	active = false;
 	tether: Tether | null = null;
@@ -51,8 +42,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	constructor(private el: ElementRef) {
-	}
+	constructor(private el: ElementRef) {}
 
 	updateTip(open: boolean) {
 		this.active = open;
@@ -70,10 +60,9 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 			constraints: [
 				{
 					to: 'scrollParent',
-					attachment: 'together'
-				}
+					attachment: 'together',
+				},
 			],
-
 		});
 	}
 

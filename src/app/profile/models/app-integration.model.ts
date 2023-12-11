@@ -1,15 +1,15 @@
-import {ManagedEntity} from '../../common/model/managed-entity';
+import { ManagedEntity } from '../../common/model/managed-entity';
 import {
 	ApiAppIntegration,
 	ApiAppIntegrationRef,
 	ApiAppIntegrationUid,
 	ApiBadgebookCanvasLti1AppIntegration,
-	AppIntegrationType, isApiBadgebookCanvasLti1AppIntegration
+	AppIntegrationType,
+	isApiBadgebookCanvasLti1AppIntegration,
 } from './app-integration-api.model';
-import {CommonEntityManager} from '../../entity-manager/services/common-entity-manager.service';
+import { CommonEntityManager } from '../../entity-manager/services/common-entity-manager.service';
 
 export abstract class AppIntegration<T extends ApiAppIntegration> extends ManagedEntity<T, ApiAppIntegrationRef> {
-
 	abstract name: string;
 	abstract description: string;
 	abstract active: boolean;
@@ -30,11 +30,7 @@ export abstract class AppIntegration<T extends ApiAppIntegration> extends Manage
 		}
 	}
 
-	constructor(
-		commonManager: CommonEntityManager,
-		initialEntity?: T,
-		onUpdateSubscribed?: () => void
-	) {
+	constructor(commonManager: CommonEntityManager, initialEntity?: T, onUpdateSubscribed?: () => void) {
 		super(commonManager, onUpdateSubscribed);
 
 		if (initialEntity) {
@@ -44,8 +40,8 @@ export abstract class AppIntegration<T extends ApiAppIntegration> extends Manage
 
 	protected buildApiRef(): ApiAppIntegrationRef {
 		return {
-			"@id": AppIntegration.idForApiModel(this.apiModel),
-			"slug": AppIntegration.idForApiModel(this.apiModel),
+			'@id': AppIntegration.idForApiModel(this.apiModel),
+			slug: AppIntegration.idForApiModel(this.apiModel),
 		};
 	}
 
@@ -60,28 +56,30 @@ export abstract class AppIntegration<T extends ApiAppIntegration> extends Manage
 	get integrationData(): object {
 		return this.apiModel.integrationData;
 	}
-
-
 }
 
 export class UnknownLti1Integration extends AppIntegration<ApiAppIntegration> {
 	get name() {
-		return this.integrationUid
-			? `${this.integrationType}: ${this.integrationUid}`
-			: `${this.integrationType}`;
+		return this.integrationUid ? `${this.integrationType}: ${this.integrationUid}` : `${this.integrationType}`;
 	}
-	description = "Unknown integration";
+	description = 'Unknown integration';
 	active = true;
-	image = require("../../../breakdown/static/images/placeholderavatar-issuer.svg") as string;
+	image = '../../../breakdown/static/images/placeholderavatar-issuer.svg';
 }
 
 export class BadebookLti1Integration extends AppIntegration<ApiBadgebookCanvasLti1AppIntegration> {
-	name = "Canvas LTI";
-	description = "Badgr connects with Canvas LTI to automatically award badges to students as they complete modules.";
+	name = 'Canvas LTI';
+	description = 'Badgr connects with Canvas LTI to automatically award badges to students as they complete modules.';
 	active = true;
-	image = require("../../../breakdown/static/images/canvas-icon.svg") as string;
+	image = '../../../breakdown/static/images/canvas-icon.svg';
 
-	get consumerKey() { return this.apiModel.integrationData.credential.client_id; }
-	get sharedSecret() { return this.apiModel.integrationData.credential.client_secret; }
-	get configUrl() { return this.apiModel.integrationData.config_url; }
+	get consumerKey() {
+		return this.apiModel.integrationData.credential.client_id;
+	}
+	get sharedSecret() {
+		return this.apiModel.integrationData.credential.client_secret;
+	}
+	get configUrl() {
+		return this.apiModel.integrationData.config_url;
+	}
 }

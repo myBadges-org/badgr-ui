@@ -1,12 +1,11 @@
-import { async } from '@angular/core/testing';
-import {PublicApiBadgeAssertion} from './public-api.model';
-import {Directive} from '@angular/core';
+import { waitForAsync } from '@angular/core/testing';
+import { PublicApiBadgeAssertion } from './public-api.model';
+import { Directive } from '@angular/core';
 
 describe('My Test', () => {
-  let service;
+	let service;
 
-  beforeEach(() => {
-    // TODO
-  });
-
+	beforeEach(() => {
+		// TODO
+	});
 });

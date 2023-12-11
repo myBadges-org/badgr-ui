@@ -1,31 +1,29 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { SessionService } from "../../../common/services/session.service";
-import { BaseAuthenticatedRoutableComponent } from "../../../common/pages/base-authenticated-routable.component";
-import { MessageService } from "../../../common/services/message.service";
-import { IssuerManager } from "../../../issuer/services/issuer-manager.service";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SessionService } from '../../../common/services/session.service';
+import { BaseAuthenticatedRoutableComponent } from '../../../common/pages/base-authenticated-routable.component';
+import { MessageService } from '../../../common/services/message.service';
+import { IssuerManager } from '../../../issuer/services/issuer-manager.service';
 //import {BadgeClassManager} from '../../services/badgeclass-manager.service';
-import { Issuer } from "../../../issuer/models/issuer.model";
+import { Issuer } from '../../../issuer/models/issuer.model';
 //import {BadgeClass} from '../../models/badgeclass.model';
-import { Title } from "@angular/platform-browser";
-import { preloadImageURL } from "../../../common/util/file-util";
-import { AppConfigService } from "../../../common/app-config.service";
-import { BaseRoutableComponent } from "../../../common/pages/base-routable.component";
-import { StringMatchingUtil } from "../../../common/util/string-matching-util";
+import { Title } from '@angular/platform-browser';
+import { preloadImageURL } from '../../../common/util/file-util';
+import { AppConfigService } from '../../../common/app-config.service';
+import { BaseRoutableComponent } from '../../../common/pages/base-routable.component';
+import { StringMatchingUtil } from '../../../common/util/string-matching-util';
 
-import { Map, NavigationControl, Popup } from "maplibre-gl";
+import { Map, NavigationControl, Popup } from 'maplibre-gl';
 
 @Component({
-	selector: "app-issuer-catalog",
-	templateUrl: "./issuer-catalog.component.html",
-	styleUrls: ["./issuer-catalog.component.css"],
+	selector: 'app-issuer-catalog',
+	templateUrl: './issuer-catalog.component.html',
+	styleUrls: ['./issuer-catalog.component.css'],
 })
 export class IssuerCatalogComponent extends BaseRoutableComponent implements OnInit, AfterViewInit {
-	readonly issuerPlaceholderSrc = preloadImageURL(
-		require("../../../../breakdown/static/images/placeholderavatar-issuer.svg") as string
-	);
+	readonly issuerPlaceholderSrc = preloadImageURL('../../../../breakdown/static/images/placeholderavatar-issuer.svg');
 	readonly noIssuersPlaceholderSrc =
-		require("../../../../../node_modules/@concentricsky/badgr-style/dist/images/image-empty-issuer.svg") as string;
+		'../../../../assets/@concentricsky/badgr-style/dist/images/image-empty-issuer.svg';
 
 	Array = Array;
 
@@ -37,12 +35,12 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 	//badgesLoaded: Promise<unknown>;
 	issuerResults: Issuer[] = [];
 	issuerResultsByCategory: MatchingIssuerCategory[] = [];
-	order = "asc";
-	public badgesDisplay = "grid";
+	order = 'asc';
+	public badgesDisplay = 'grid';
 
 	issuerGeoJson;
 
-	private _searchQuery = "";
+	private _searchQuery = '';
 	get searchQuery() {
 		return this._searchQuery;
 	}
@@ -69,32 +67,32 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 	}
 
 	issuerKeys = {
-		schule: "Schulen",
-		hochschule: "Hochschulen und Universitäten",
-		andere: "Andere (Bibliotheken, Museen, FabLabs, Unternehmen, Vereine, ...)",
-		"n/a": "Keine Angabe",
+		schule: 'Schulen',
+		hochschule: 'Hochschulen und Universitäten',
+		andere: 'Andere (Bibliotheken, Museen, FabLabs, Unternehmen, Vereine, ...)',
+		'n/a': 'Keine Angabe',
 	};
 
 	plural = {
 		issuer: {
-			"=0": "Keine Institutionen",
-			"=1": "1 Institution",
-			other: "# Institutionen",
+			'=0': 'Keine Institutionen',
+			'=1': '1 Institution',
+			other: '# Institutionen',
 		},
 		badges: {
-			"=0": "Keine Badges",
-			"=1": '<strong class="u-text-bold">1</strong> Badge',
+			'=0': 'Keine Badges',
+			'=1': '<strong class="u-text-bold">1</strong> Badge',
 			other: '<strong class="u-text-bold">#</strong> Badges',
 		},
 		recipient: {
-			"=0": "Kein Empfänger",
-			"=1": "1 Empfänger",
-			other: "# Empfänger",
+			'=0': 'Kein Empfänger',
+			'=1': '1 Empfänger',
+			other: '# Empfänger',
 		},
 	};
 
 	mapObject;
-	@ViewChild("map", { static: false })
+	@ViewChild('map')
 	private mapContainer: ElementRef<HTMLElement>;
 
 	constructor(
@@ -108,7 +106,7 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 		route: ActivatedRoute
 	) {
 		super(router, route);
-		title.setTitle(`Issuers - ${this.configService.theme["serviceName"] || "Badgr"}`);
+		title.setTitle(`Issuers - ${this.configService.theme['serviceName'] || 'Badgr'}`);
 
 		// subscribe to issuer and badge class changes
 		this.issuersLoaded = this.loadIssuers();
@@ -125,13 +123,13 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 						.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 					this.issuerResults = this.issuers;
 					this.issuerResults.sort((a, b) => a.name.localeCompare(b.name));
-					this.mapObject.on("load", function () {
+					this.mapObject.on('load', function () {
 						that.generateGeoJSON(that.issuerResults);
 					});
 					resolve(issuers);
 				},
 				(error) => {
-					this.messageService.reportAndThrowError("Failed to load issuers", error);
+					this.messageService.reportAndThrowError('Failed to load issuers', error);
 				}
 			);
 		});
@@ -142,29 +140,29 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 	}
 
 	ngAfterViewInit() {
-		const myAPIKey = "pk.eyJ1IjoidW11dDAwIiwiYSI6ImNrdXpoeDh3ODB5NzMydnFxMzI4eTlma3AifQ.SXH5fK6-sTOhrgWxiT10OQ";
-		const mapStyle = "mapbox://styles/mapbox/streets-v11";
+		const myAPIKey = 'pk.eyJ1IjoidW11dDAwIiwiYSI6ImNrdXpoeDh3ODB5NzMydnFxMzI4eTlma3AifQ.SXH5fK6-sTOhrgWxiT10OQ';
+		const mapStyle = 'mapbox://styles/mapbox/streets-v11';
 
 		const initialState = { lng: 10.5, lat: 51, zoom: 5 };
 		const style: any = {
 			version: 8,
 			sources: {
 				osm: {
-					type: "raster",
-					tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+					type: 'raster',
+					tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
 					tileSize: 256,
-					attribution: "&copy; OpenStreetMap Contributors",
+					attribution: '&copy; OpenStreetMap Contributors',
 					maxzoom: 19,
 				},
 			},
 			layers: [
 				{
-					id: "osm",
-					type: "raster",
-					source: "osm", // This must match the source key above
+					id: 'osm',
+					type: 'raster',
+					source: 'osm', // This must match the source key above
 				},
 			],
-			glyphs: "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
+			glyphs: 'https://fonts.openmaptiles.org/{fontstack}/{range}.pbf',
 		};
 		this.mapObject = new Map({
 			container: this.mapContainer.nativeElement,
@@ -175,13 +173,13 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 
 		this.mapObject.addControl(new NavigationControl());
 		let that = this;
-		this.mapObject.on("load", function () {
+		this.mapObject.on('load', function () {
 			// Add an image to use as a custom marker
 			that.mapObject.loadImage(
-				"https://maplibre.org/maplibre-gl-js-docs/assets/osgeo-logo.png",
+				'https://maplibre.org/maplibre-gl-js-docs/assets/osgeo-logo.png',
 				function (error, image) {
 					if (error) throw error;
-					that.mapObject.addImage("custom-marker", image);
+					that.mapObject.addImage('custom-marker', image);
 				}
 			);
 		});
@@ -206,7 +204,7 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 			if (!categoryResults) {
 				categoryResults = issuerResultsByCategoryLocal[item.category] = new MatchingIssuerCategory(
 					item.category,
-					""
+					''
 				);
 
 				// append result to the issuerResults array bound to the view template.
@@ -238,7 +236,7 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 		let featureCollection = [];
 		issuers.forEach((issuer) => {
 			featureCollection.push({
-				type: "Feature",
+				type: 'Feature',
 				properties: {
 					name: issuer.name,
 					slug: issuer.slug,
@@ -247,29 +245,29 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 					category: issuer.category,
 				},
 				geometry: {
-					type: "Point",
+					type: 'Point',
 					coordinates: [issuer.lon, issuer.lat],
 				},
 			});
 		});
 
 		this.issuerGeoJson = {
-			type: "FeatureCollection",
+			type: 'FeatureCollection',
 			features: featureCollection,
 		};
 
-		if (!this.mapObject.getSource("issuers")) {
-			this.mapObject.addSource("issuers", {
-				type: "geojson",
+		if (!this.mapObject.getSource('issuers')) {
+			this.mapObject.addSource('issuers', {
+				type: 'geojson',
 				data: this.issuerGeoJson,
 				cluster: true,
 				clusterRadius: 10,
 			});
 			this.mapObject.addLayer({
-				id: "issuers",
-				type: "circle",
-				source: "issuers",
-				filter: ["!", ["has", "point_count"]],
+				id: 'issuers',
+				type: 'circle',
+				source: 'issuers',
+				filter: ['!', ['has', 'point_count']],
 				// 'layout': {
 				// 	'icon-image': 'custom-marker',
 				// 	// get the year from the source's "year" property
@@ -279,73 +277,73 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 				// 	'text-anchor': 'top'
 				// 	}
 				paint: {
-					"circle-radius": {
+					'circle-radius': {
 						base: 4,
 						stops: [
 							[12, 6],
 							[22, 180],
 						],
 					},
-					"circle-color": [
-						"match",
-						["get", "category"],
-						"schule",
-						"#fbb03b",
-						"hochschule",
-						"#e55e5e",
-						"andere",
-						"#3bb2d0",
-						"n/a",
-						"#223b53",
-						/* other */ "#ccc",
+					'circle-color': [
+						'match',
+						['get', 'category'],
+						'schule',
+						'#fbb03b',
+						'hochschule',
+						'#e55e5e',
+						'andere',
+						'#3bb2d0',
+						'n/a',
+						'#223b53',
+						/* other */ '#ccc',
 					],
 					// "circle-color": "#5b94c6",
 				},
 			});
 
 			this.mapObject.addLayer({
-				id: "issuersCluster",
-				type: "circle",
-				source: "issuers",
-				filter: ["has", "point_count"],
+				id: 'issuersCluster',
+				type: 'circle',
+				source: 'issuers',
+				filter: ['has', 'point_count'],
 				paint: {
-					"circle-radius": {
+					'circle-radius': {
 						base: 10,
 						stops: [
 							[12, 10],
 							[22, 180],
 						],
 					},
-					"circle-color": [
-						"match",
-						["get", "category"],
-						"schule",
-						"#fbb03b",
-						"hochschule",
-						"#e55e5e",
-						"andere",
-						"#3bb2d0",
-						"n/a",
-						"#223b53",
-						/* other */ "#ccc",
+					'circle-color': [
+						'match',
+						['get', 'category'],
+						'schule',
+						'#fbb03b',
+						'hochschule',
+						'#e55e5e',
+						'andere',
+						'#3bb2d0',
+						'n/a',
+						'#223b53',
+						/* other */ '#ccc',
 					],
 					// "circle-color": "#5b94c6",
 				},
 			});
 
 			this.mapObject.addLayer({
-				id: "cluster-count",
-				type: "symbol",
-				source: "issuers",
-				filter: ["has", "point_count"],
+				id: 'cluster-count',
+				type: 'symbol',
+				source: 'issuers',
+				filter: ['has', 'point_count'],
 				layout: {
-					"text-field": "{point_count_abbreviated}",
-					"text-font": ["Open Sans Regular"],
-					"text-size": 12,
+					'text-field': '{point_count_abbreviated}',
+					'text-font': ['Open Sans Regular'],
+					'text-size': 12,
 				},
 			});
 
-			this.mapObject.on("click", "issuers", (e) => {
+			this.mapObject.on('click', 'issuers', (e) => {
 				// Copy coordinates array.
 				const coordinates = e.features[0].geometry.coordinates.slice();
 				const name = e.features[0].properties.name;
@@ -367,18 +365,18 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 							slug +
 							'">' +
 							name +
-							"</a><br><p>" +
+							'</a><br><p>' +
 							desc +
-							"</p></div>"
+							'</p></div>'
 					)
 					.addTo(this.mapObject);
 			});
 
-			this.mapObject.on("click", "issuersCluster", (e) => {
+			this.mapObject.on('click', 'issuersCluster', (e) => {
 				const coordinates = e.features[0].geometry.coordinates.slice();
 
 				const features = this.mapObject.queryRenderedFeatures(e.point, {
-					layers: ["issuersCluster"],
+					layers: ['issuersCluster'],
 				});
 
 				const clusterId = features[0].properties.cluster_id;
@@ -386,7 +384,7 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 
 				var htmlString = '<div style="padding:5px"><ul>';
 
-				this.mapObject.getSource("issuers").getClusterLeaves(clusterId, pointCount, 0, (error, features) => {
+				this.mapObject.getSource('issuers').getClusterLeaves(clusterId, pointCount, 0, (error, features) => {
 					features.forEach((feature) => {
 						htmlString +=
 							'<li><a href="public/issuers/' +
@@ -395,30 +393,30 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 							feature.properties.category +
 							'"></div>' +
 							feature.properties.name +
-							"</li>";
+							'</li>';
 					});
-					htmlString += "</ul></div>";
+					htmlString += '</ul></div>';
 
 					new Popup().setLngLat(coordinates).setHTML(htmlString).addTo(this.mapObject);
 				});
 			});
 
 			// Change the cursor to a pointer when the mouse is over the places layer.
-			this.mapObject.on("mouseenter", "issuers", () => {
-				this.mapObject.getCanvas().style.cursor = "pointer";
+			this.mapObject.on('mouseenter', 'issuers', () => {
+				this.mapObject.getCanvas().style.cursor = 'pointer';
 			});
 
 			// Change it back to a pointer when it leaves.
-			this.mapObject.on("mouseleave", "issuers", () => {
-				this.mapObject.getCanvas().style.cursor = "";
+			this.mapObject.on('mouseleave', 'issuers', () => {
+				this.mapObject.getCanvas().style.cursor = '';
 			});
 		} else {
-			this.mapObject.getSource("issuers").setData(this.issuerGeoJson);
+			this.mapObject.getSource('issuers').setData(this.issuerGeoJson);
 		}
 	}
 
 	changeOrder(order) {
-		if (order === "asc") {
+		if (order === 'asc') {
 			this.issuerResults.sort((a, b) => a.name.localeCompare(b.name));
 			this.issuerResultsByCategory.forEach((r) => r.issuers.sort((a, b) => a.name.localeCompare(b.name)));
 		} else {
@@ -428,7 +426,7 @@ export class IssuerCatalogComponent extends BaseRoutableComponent implements OnI
 	}
 
 	openMap() {
-		this.badgesDisplay = "map";
+		this.badgesDisplay = 'map';
 		let that = this;
 		setTimeout(function () {
 			that.mapObject.resize();

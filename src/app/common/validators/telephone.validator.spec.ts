@@ -1,16 +1,15 @@
-import { async } from '@angular/core/testing';
-import {TelephoneValidator} from './telephone.validator';
-import {Directive} from '@angular/core';
+import { waitForAsync } from '@angular/core/testing';
+import { TelephoneValidator } from './telephone.validator';
+import { Directive } from '@angular/core';
 
 describe('My Test', () => {
-  let service;
+	let service;
 
-  beforeEach(() => {
-    // TODO
-  });
+	beforeEach(() => {
+		// TODO
+	});
 
-      it('should run #{key}', async () => {
-        // const result = validTelephone(control);
-      });
-
+	it('should run #{key}', async () => {
+		// const result = validTelephone(control);
+	});
 });

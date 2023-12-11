@@ -4,9 +4,9 @@
 	<div class="l-containerxaxis topbar-x-wrap">
 		<h2 class="topbar-x-heading">
 			Institutionen
-			<ng-template [bgAwaitPromises]="[issuersLoaded]" [showLoader]="false">
+			<ng-template [showLoader]="false" [bgAwaitPromises]="[issuersLoaded]">
 				<span class="topbar-x-internalheading">
-					{{ issuers.length | i18nPlural: plural['issuer'] }}
+					{{ issuers.length | i18nPlural : plural['issuer'] }}
 				</span>
 			</ng-template>
 		</h2>
@@ -22,7 +22,7 @@
 </header>
 
 <div>
-	<ng-template [bgAwaitPromises]="[issuersLoaded]" [showLoader]="true">
+	<ng-template [showLoader]="true" [bgAwaitPromises]="[issuersLoaded]">
 		<!-- Empty state: no issuers -->
 		<section class="emptysection l-emptysection" *ngIf="Array.isArray(issuers) && issuers?.length === 0">
 			<h2 class="emptysection-x-headline">Du hast noch keine Institution erstellt</h2>
@@ -81,7 +81,7 @@
 											{{ badge.name }}
 										</a>
 										<p class="u-text-small u-text-dark4">
-											{{ badge.recipientCount | i18nPlural: plural['recipient'] }}
+											{{ badge.recipientCount | i18nPlural : plural['recipient'] }}
 										</p>
 									</div>
 								</div>
@@ -95,7 +95,7 @@
 						<svg class="icon icon-light4 u-hidden-maxmobilelarge" width="24px" icon="icon_badge"></svg>
 						<p
 							class="u-text-small u-text-nowrap"
-							[innerHTML]="issuer.badgeClassCount | i18nPlural: plural['badges']"
+							[innerHTML]="issuer.badgeClassCount | i18nPlural : plural['badges']"
 						></p>
 					</div>
 					<a class="u-text u-text-small" [routerLink]="['/issuer/issuers/', issuer.slug]">Öffnen</a>

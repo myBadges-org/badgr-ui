@@ -30,7 +30,7 @@ export class ExportPdfDialog extends BaseDialog {
 
 	imageLoader: (file: File | string) => Promise<string> = basicImageLoader;
 
-	@ViewChild('outputPdf', { static: false }) outputElement: ElementRef;
+	@ViewChild('outputPdf') outputElement: ElementRef;
 
 	resolveFunc: () => void;
 	rejectFunc: () => void;
@@ -49,7 +49,7 @@ export class ExportPdfDialog extends BaseDialog {
 		this.profileManager.userProfilePromise.then(
 			(profile) => {
 				this.profile = profile;
-				this.emailsLoaded = profile.emails.loadedPromise;
+				if (profile !== undefined) this.emailsLoaded = profile.emails.loadedPromise;
 			},
 			(error) => this.messageService.reportAndThrowError('Failed to load userProfile', error)
 		);
