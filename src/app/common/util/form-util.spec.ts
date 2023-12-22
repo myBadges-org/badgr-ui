@@ -1,12 +1,11 @@
-import { async } from '@angular/core/testing';
-import {markControlsDirty} from './form-util';
-import {Directive} from '@angular/core';
+import { waitForAsync } from '@angular/core/testing';
+import { markControlsDirty } from './form-util';
+import { Directive } from '@angular/core';
 
 describe('My Test', () => {
-  let service;
+	let service;
 
-  beforeEach(() => {
-    // TODO
-  });
-
+	beforeEach(() => {
+		// TODO
+	});
 });

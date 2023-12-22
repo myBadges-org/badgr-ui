@@ -19,12 +19,13 @@ import { LinkEntry } from '../../../common/components/bg-breadcrumbs/bg-breadcru
 	templateUrl: 'recipient-badge-collection-detail.component.html',
 })
 export class RecipientBadgeCollectionDetailComponent extends BaseAuthenticatedRoutableComponent implements OnInit {
-	readonly badgeLoadingImageUrl = require('../../../../breakdown/static/images/badge-loading.svg');
-	readonly badgeFailedImageUrl = require('../../../../breakdown/static/images/badge-failed.svg');
-	readonly noBadgesImageUrl = require('../../../../../node_modules/@concentricsky/badgr-style/dist/images/image-empty-backpack.svg');
-	readonly noCollectionsImageUrl = require('../../../../../node_modules/@concentricsky/badgr-style/dist/images/image-empty-collection.svg');
+	readonly badgeLoadingImageUrl = '../../../../breakdown/static/images/badge-loading.svg';
+	readonly badgeFailedImageUrl = '../../../../breakdown/static/images/badge-failed.svg';
+	readonly noBadgesImageUrl = '../../../../assets/@concentricsky/badgr-style/dist/images/image-empty-backpack.svg';
+	readonly noCollectionsImageUrl =
+		'../../../../assets/@concentricsky/badgr-style/dist/images/image-empty-collection.svg';
 
-	@ViewChild('recipientBadgeDialog', { static: false })
+	@ViewChild('recipientBadgeDialog')
 	recipientBadgeDialog: RecipientBadgeSelectionDialog;
 
 	collectionLoadedPromise: Promise<unknown>;

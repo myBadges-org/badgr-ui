@@ -119,7 +119,7 @@ export const COMMON_MODULE_COMPONENTS = [
 	TooltipComponent,
 	TruncatedTextComponent,
 	ExportPdfDialog,
-	NounprojectDialog
+	NounprojectDialog,
 ];
 
 const SERVICES = [
@@ -144,7 +144,7 @@ const SERVICES = [
 	ExternalToolsManager,
 	AppConfigService,
 	NavigationService,
-	ZipService
+	ZipService,
 ];
 
 const GUARDS = [AuthGuard];
@@ -154,31 +154,15 @@ const PIPES = [UcFirstPipe];
 export const COMMON_IMPORTS = [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule];
 
 @NgModule({
-	imports: [
-		...COMMON_IMPORTS,
-		FormsModule,
-		LMarkdownEditorModule,
-		// RouterModule.forChild(routes)
-	],
-	providers: [
-		BadgeClassManager,
-		BadgeClassApiService
-	],
+	imports: [...COMMON_IMPORTS, FormsModule, LMarkdownEditorModule],
+	providers: [BadgeClassManager, BadgeClassApiService],
 	declarations: [...DIRECTIVES, ...COMMON_MODULE_COMPONENTS, ...PIPES, ForwardRouteComponent, BadgeLegendComponent],
 	exports: [...DIRECTIVES, ...COMMON_MODULE_COMPONENTS, ...PIPES, BadgeLegendComponent],
-	entryComponents: [
-		// Allows the dynamic creation of our components using the ComponentFactoryProvider. This is used in structural
-		// directives like BgAwaitPromises. See https://github.com/angular/angular/issues/10735 for details.
-		...COMMON_MODULE_COMPONENTS,
-	],
-	/*providers: [
-		...SERVICES,
-	]*/
 })
 export class BadgrCommonModule {
 	// Load BadgrCommonModule with forRoot() to preserve singleton status in lazy loaded modules.
 	// see: https://www.youtube.com/watch?v=SBSnsNHQYo4
-	static forRoot(): ModuleWithProviders {
+	static forRoot(): ModuleWithProviders<BadgrCommonModule> {
 		return {
 			ngModule: BadgrCommonModule,
 			providers: [...SERVICES, ...GUARDS],

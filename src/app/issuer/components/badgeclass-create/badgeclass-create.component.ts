@@ -30,7 +30,7 @@ export class BadgeClassCreateComponent extends BaseAuthenticatedRoutableComponen
 	badgesLoaded: Promise<unknown>;
 	badges: BadgeClass[] = null;
 
-	@ViewChild('badgeimage', { static: false }) badgeImage;
+	@ViewChild('badgeimage') badgeImage;
 
 	constructor(
 		sessionService: SessionService,
@@ -56,17 +56,14 @@ export class BadgeClassCreateComponent extends BaseAuthenticatedRoutableComponen
 				{ title: 'Create Badge' },
 			];
 
-			this.badgesLoaded = new Promise((resolve, reject) => {
+			this.badgesLoaded = new Promise<void>((resolve, reject) => {
 				this.badgeClassService.allPublicBadges$.subscribe(
 					(publicBadges) => {
-						this.badges = publicBadges
+						this.badges = publicBadges;
 						resolve();
 					},
 					(error) => {
-						this.messageService.reportAndThrowError(
-							`Failed to load badges`,
-							error
-						);
+						this.messageService.reportAndThrowError(`Failed to load badges`, error);
 						resolve();
 					}
 				);
@@ -104,10 +101,11 @@ export class BadgeClassCreateComponent extends BaseAuthenticatedRoutableComponen
 	}
 
 	copyBadge() {
-		this.dialogService.copyBadgeDialog.openDialog(this.badges)
+		this.dialogService.copyBadgeDialog
+			.openDialog(this.badges)
 			.then((data: any) => {
 				if (data) {
-					this.copiedBadgeClass = data
+					this.copiedBadgeClass = data;
 				}
 			})
 			.catch((error) => {

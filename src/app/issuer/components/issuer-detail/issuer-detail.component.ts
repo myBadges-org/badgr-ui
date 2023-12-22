@@ -24,10 +24,10 @@ import { LinkEntry } from '../../../common/components/bg-breadcrumbs/bg-breadcru
 })
 export class IssuerDetailComponent extends BaseAuthenticatedRoutableComponent implements OnInit {
 	readonly issuerImagePlaceHolderUrl = preloadImageURL(
-		require('../../../../breakdown/static/images/placeholderavatar-issuer.svg') as string
+		'../../../../breakdown/static/images/placeholderavatar-issuer.svg'
 	);
 	readonly noIssuersPlaceholderSrc =
-		require('../../../../../node_modules/@concentricsky/badgr-style/dist/images/image-empty-issuer.svg') as string;
+		'../../../../assets/@concentricsky/badgr-style/dist/images/image-empty-issuer.svg';
 
 	issuer: Issuer;
 	issuerSlug: string;
@@ -76,7 +76,7 @@ export class IssuerDetailComponent extends BaseAuthenticatedRoutableComponent im
 					{ title: this.issuer.name, routerLink: ['/issuer/issuers/' + this.issuer.slug] },
 				];
 
-				this.badgesLoaded = new Promise((resolve, reject) => {
+				this.badgesLoaded = new Promise<void>((resolve, reject) => {
 					this.badgeClassService.badgesByIssuerUrl$.subscribe(
 						(badgesByIssuer) => {
 							const cmp = (a, b) => (a === b ? 0 : a < b ? -1 : 1);

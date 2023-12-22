@@ -30,12 +30,7 @@ interface UploadResult {
 		'[class.forminput-locked]': 'isLockedState',
 	},
 	template: `<md-editor (ngModelChange)="change()" [(ngModel)]="markdown_content" [upload]="doUpload"></md-editor>`,
-	styleUrls: [
-		'../../../../node_modules/bootstrap/dist/css/bootstrap.css',
-		'../../../../node_modules/ace-builds/css/ace.css',
-		'../../../../node_modules/font-awesome/css/font-awesome.css',
-		'../../../../node_modules/ngx-markdown-editor/assets/highlight.js/agate.min.css',
-	],
+	styleUrls: ['./formfield-markdown.css'],
 	encapsulation: ViewEncapsulation.ShadowDom,
 })
 export class FormFieldMarkdown implements OnChanges, AfterViewInit {
@@ -155,8 +150,8 @@ export class FormFieldMarkdown implements OnChanges, AfterViewInit {
 
 	@Input() autofocus = false;
 
-	@ViewChild('textareaInput', { static: false }) textareaInput: ElementRef;
-	@ViewChild('markdownPreviewPane', { static: false }) markdownPreviewPane: ElementRef;
+	@ViewChild('textareaInput') textareaInput: ElementRef;
+	@ViewChild('markdownPreviewPane') markdownPreviewPane: ElementRef;
 
 	textHeight: number;
 	_preview = false;
@@ -197,7 +192,7 @@ export class FormFieldMarkdown implements OnChanges, AfterViewInit {
 			) {
 				this.control.setValue(initialValue);
 			}
-		} else if ('newValue' in changes){
+		} else if ('newValue' in changes) {
 			const newValue = changes['newValue'].currentValue;
 			this.markdown_content = newValue;
 		}

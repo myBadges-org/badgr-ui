@@ -1,19 +1,18 @@
-import { async } from '@angular/core/testing';
-import {AppIntegrationManager} from './app-integration-manager.service';
+import { waitForAsync } from '@angular/core/testing';
+import { AppIntegrationManager } from './app-integration-manager.service';
 
 describe('AppIntegrationManager', () => {
-  let service;
+	let service;
 
-  const commonManager: any = {
-    // mock properties here 
-  }
+	const commonManager: any = {
+		// mock properties here
+	};
 
-  const appIntegrationService: any = {
-    // mock properties here 
-  }
+	const appIntegrationService: any = {
+		// mock properties here
+	};
 
-  beforeEach(() => {
-    service = new AppIntegrationManager(commonManager,appIntegrationService);
-  });
-
+	beforeEach(() => {
+		service = new AppIntegrationManager(commonManager, appIntegrationService);
+	});
 });

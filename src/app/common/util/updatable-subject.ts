@@ -1,4 +1,4 @@
-import {Subject, Subscriber} from 'rxjs';
+import { Subject, Subscriber, Observer } from 'rxjs';
 
 /**
  * A Subject for objects that will be loaded at some point and may be subsequently updated. Acts like a promise with updates:
@@ -17,9 +17,7 @@ export class UpdatableSubject<T> extends Subject<T> {
 	 * @param onFirstSubscription Callback to be invoked upon the first subscription to this subject. Allows
 	 * initialization actions to be deferred until something is interested in the subject.
 	 */
-	constructor(
-		private onFirstSubscription: () => void = () => {}
-	) {
+	constructor(private onFirstSubscription: () => void = () => {}) {
 		super();
 	}
 
@@ -39,33 +37,41 @@ export class UpdatableSubject<T> extends Subject<T> {
 		return this._valueSet;
 	}
 
-	_subscribe(
-		subscriber: Subscriber<T>
-	) {
-		const subscription = super._subscribe(subscriber);
+	/**
+	 * Subscribe to this subject with a given observer (typically a `Subscriber`).
+	 * If this is the first subscriber, `onFirstSubscription` is getting called.
+	 * If a value is already set, `next` is getting called once, and then for
+	 * every new updated value.
+	 */
+	override subscribe(observerOrNext?: Partial<Observer<T>> | ((value: T) => void) | null) {
+		const subscriber = super.subscribe(observerOrNext) as Subscriber<T>;
 
 		if (!this.hasFirstSubscriber) {
 			this.onFirstSubscription();
 			this.hasFirstSubscriber = true;
 		}
 
-		if (this._valueSet && subscription) {
+		if (this._valueSet && subscriber) {
+			// Inform of initial value (via `next`) on next animation frame
 			requestAnimationFrame(() => subscriber.next(this._value!));
 		}
 
-		return subscription;
+		return subscriber;
 	}
 
-	next(value: T): void {
+	override next(value: T): void {
 		this._valueSet = true;
-		super.next(this._value = value);
+		super.next((this._value = value));
 	}
 
-	error(err: unknown): void {
+	override error(err: unknown): void {
 		this.hasError = true;
-		super.error(this.thrownError = err);
+		super.error((this.thrownError = err));
 	}
 
+	/**
+	 * Exactly the same as `next`
+	 */
 	safeNext(value: T): void {
 		// TODO: Will next() work without a subscription check?
 		this.next(value);
@@ -81,15 +87,11 @@ export class UpdatableSubject<T> extends Subject<T> {
 }
 
 export class LoadableValueSubject<T> extends UpdatableSubject<T> {
-	constructor(
-		private fetchData: () => Promise<T>
-	) {
+	constructor(private fetchData: () => Promise<T>) {
 		super(() => this.update);
 	}
 
 	update(): Promise<T> {
-		return this.fetchData().then(
-			data => (this.safeNext(data), data)
-		);
+		return this.fetchData().then((data) => (this.safeNext(data), data));
 	}
 }
