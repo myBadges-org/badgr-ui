@@ -31,10 +31,10 @@ export class RecipientEarnedBadgeListComponent extends BaseAuthenticatedRoutable
 	readonly badgeLoadingImageUrl = '../../../../breakdown/static/images/badge-loading.svg';
 	readonly badgeFailedImageUrl = '../../../../breakdown/static/images/badge-failed.svg';
 
-	@ViewChild('addBadgeDialog')
+	@ViewChild('addBadgeDialog', { static: false })
 	addBadgeDialog: AddBadgeDialogComponent;
 
-	@ViewChild(ImportLauncherDirective) importLauncherDirective: ImportLauncherDirective;
+	@ViewChild(ImportLauncherDirective, { static: false }) importLauncherDirective: ImportLauncherDirective;
 
 	allBadges: RecipientBadgeInstance[] = [];
 	badgesLoaded: Promise<unknown>;
@@ -174,10 +174,10 @@ export class RecipientEarnedBadgeListComponent extends BaseAuthenticatedRoutable
 	deleteBadge(badge: RecipientBadgeInstance) {
 		this.dialogService.confirmDialog
 			.openResolveRejectDialog({
-				dialogTitle: 'Confirm Remove',
-				dialogBody: `Are you sure you want to remove ${badge.badgeClass.name} from your badges?`,
-				rejectButtonLabel: 'Cancel',
-				resolveButtonLabel: 'Remove Badge',
+				dialogTitle: 'Badge Entfernen',
+				dialogBody: `Soll die Badge '${badge.badgeClass.name}' wirklich entfernt werden?`,
+				rejectButtonLabel: 'Abbrechen',
+				resolveButtonLabel: 'Badge Entfernen',
 			})
 			.then(
 				() => this.recipientBadgeManager.deleteRecipientBadge(badge),

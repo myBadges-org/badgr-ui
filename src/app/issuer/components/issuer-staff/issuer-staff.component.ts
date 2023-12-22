@@ -110,10 +110,10 @@ export class IssuerStaffComponent extends BaseAuthenticatedRoutableComponent imp
 	async removeMember(member: IssuerStaffMember) {
 		if (
 			!(await this.dialogService.confirmDialog.openTrueFalseDialog({
-				dialogTitle: `Remove ${member.nameLabel}?`,
-				dialogBody: `${member.nameLabel} is ${member.roleInfo.indefiniteLabel} of ${this.issuer.name}. Are you sure you want to remove them from this role?`,
-				resolveButtonLabel: `Remove ${member.nameLabel}`,
-				rejectButtonLabel: 'Cancel',
+				dialogTitle: `${member.nameLabel} Entfernen`,
+				dialogBody: `${member.nameLabel} ist ${member.roleInfo.indefiniteLabel} von ${this.issuer.name}. Soll diese Person wirklich aus dieser Rolle entfernt werden?`,
+				resolveButtonLabel: `${member.nameLabel} Entfernen`,
+				rejectButtonLabel: 'Abbrechen',
 			}))
 		) {
 			return;
