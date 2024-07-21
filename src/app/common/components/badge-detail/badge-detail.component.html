@@ -7,7 +7,7 @@
                 <div class="tw-flex tw-flex-col tw-relative">
                     <div class="tw-grid md:tw-flex md:tw-justify-between md:tw-items-center">
                         <h1 hlmH1
-                            class="tw-text-purple tw-font-medium tw-hyphens-auto tw-break-words tw-max-w-[358px] md:tw-max-w-[346px] tw-mb-2 md:tw-mb-0">
+                            class="tw-text-purple tw-font-medium tw-hyphens-auto tw-break-words tw-mb-2 md:tw-mb-0">
                             {{ config.badgeTitle }}</h1>
                         <div class="tw-flex tw-gap-2">
                             <div *ngIf="config.headerButton">
@@ -74,9 +74,9 @@
                         </div>
                         <dl clss="tw-min-w-[150px]">
                             <div class="tw-flex tw-items-start md:tw-flex-row tw-flex-col">
-                                <dt class="tw-text-oebblack tw-font-bold md:tw-py-2">Tags</dt>
+                                <dt class="tw-text-oebblack tw-font-bold md:tw-py-2 md:tw-mr-2 tw-mb-1">Tags</dt>
                                 <dd class="tw-text-oebblack">
-                                    <div class="tag tw-border-[var(--color-purple)] tw-m-1 tw-ml-0 tw-max-w-24"
+                                    <div class="tag tw-border-[var(--color-purple)] tw-mx-2 tw-ml-0 tw-max-w-24"
                                         *ngFor="let tag of config.tags; last as last">{{ tag }}</div>
 
                             </div>
@@ -126,7 +126,7 @@
                             class="tw-hidden md:tw-block tw-w-full tw-col-span-full tw-my-4 tw-border tw-border-dashed tw-border-[var(--color-purple)]" />
                     </div>
                 </div>
-                <div class="md:tw-pb-8 md:tw-min-h-[800px]">
+                <div class="md:tw-pb-8 md:tw-min-h-[800px] tw-w-full">
                     <div class="tw-text-oebblack tw-pt-0 tw-pb-4">
                         <h3 hlmH3 class="tw-font-semibold tw-text-oebblack tw-mb-4">
                             Kurzbeschreibung
