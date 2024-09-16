@@ -1,0 +1,72 @@
+<section *bgAwaitPromises="[issuerLoaded]" class="l-containerxaxis l-containeryaxis">
+	<div class="u-width-form">
+		<div class="contentlong">
+			<h1 class="title">Import Vorschau</h1>
+			<p>
+				{{ transformedImportData.validRowsTransformed.size }} Zeilen können importiert werden.
+				{{ transformedImportData.duplicateRecords.length }} Zeilen sind Duplikate und werden ignoriert. Klicke
+				auf HINZUFÜGEN um die Mitglieder hinzuzufügen.
+			</p>
+		</div>
+
+		<div class="members-table-container">
+			<table class="datatable datatable-roundheaders datatable-headers">
+				<thead class="datatable-x-head members-table-container-thead">
+					<tr class="datatable-x-header">
+						<th class="datatable-x-cell" scope="col">E-Mail</th>
+						<th class="datatable-x-cell" scope="col">Rolle</th>
+						<th class="datatable-x-cell">
+							<!-- header for remove link-->
+						</th>
+					</tr>
+				</thead>
+				<tbody class="datatable-x-body">
+					<tr class="datatable-x-row" *ngFor="let row of transformedImportData.validRowsTransformed">
+						<td class="datatable-x-cell">
+							{{ row.email }}
+						</td>
+						<td class="datatable-x-cell">
+							{{ row.role }}
+						</td>
+						<td class="datatable-x-cell">
+							<button
+								class="u-text-link-small"
+								(click)="removeValidRowsTransformed(row); this.error = null; enableActionButton()"
+							>
+								Entfernen
+							</button>
+						</td>
+					</tr>
+				</tbody>
+
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
+	<!-- error -->
+	<div class="notification notification-warning notification-is-active u-margin-top2x" *ngIf="error">
+		<div class="notification-x-icon">
+			<svg>
+				<use xlink:href="/images/icons.svg#icon_priority_high"></use>
+			</svg>
+		</div>
+		<div class="notification-x-text">
+			<h2>Hinzufügen eines Mitgliedes ist fehlgeschlagen!</h2>
+			<p>{{ error }}</p>
+		</div>
+	</div>
+
+	<!-- BUTTONS -->
+	<div class="l-flex l-flex-2x u-margin-top2x">
+		<button class="button button-secondary" (click)="updateViewState('import')">Abbrechen</button>
+
+		<button
+			class="button l-marginLeft-x2"
+			[class.button-is-disabled]="buttonDisabledClass"
+			[attr.disabled]="buttonDisabledAttribute"
+			(click)="dataConfirmed()"
+		>
+			HINZUFÜGEN
+		</button>
+	</div>
+</section>

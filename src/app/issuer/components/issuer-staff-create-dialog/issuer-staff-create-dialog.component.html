@@ -1,70 +1,121 @@
 <dialog class="dialog dialog-is-active dialog l-dialog">
 	<div class="dialog-x-box o-container">
-
 		<div class="dialog-x-header">
-			<h1>Add Member</h1>
-			<button
-				(click)="closeDialog()"
-				class="buttonicon buttonicon-link">
+			<h1 *ngIf="currentTab === 'single'">Mitglied hinzufügen</h1>
+			<h1 *ngIf="currentTab === 'bulk'">Mitglieder hinzufügen</h1>
+			<button (click)="closeDialog()" class="buttonicon buttonicon-link">
 				<svg icon="icon_close"></svg>
 				<span class="visuallyhidden">Close</span>
 			</button>
 		</div>
 
 		<div class="u-padding-all3x">
-
 			<div class="l-flex l-flex-justifybetween u-margin-bottom3x">
-				<p class="u-text-body">New Staff Members must create and verify a Badgr account prior to being added to an issuer.</p>
+				<p class="u-text-body">
+					Neue Mitglieder müssen einen Account erstellt und verifiziert haben, bevor sie hinzugefügt werden
+					können.
+				</p>
 			</div>
 
-			<h3 class="u-margin-bottom2x u-text-small-bold">Choose Role</h3>
-			<form
-				[formGroup]="staffCreateForm.rawControl"
-				(ngSubmit)="submitStaffCreate()">
-				<bg-formfield-radio
-					*ngFor="let role of issuerStaffRoleOptions; last as last;"
-					[control]="staffCreateForm.rawControlMap.staffRole"
-					[name]="'staffRole'"
-					[label]="role.label"
-					[value]="role.value"
-					[sublabel]="role.description"
-					[last]="last"
-					[errorMessage]="'Please select a staff role'"
-				></bg-formfield-radio>
-				<bg-formfield-text
-					[control]="staffCreateForm.rawControlMap.staffEmail"
-					[label]="'New Member Email'"
-					[errorMessage]="'Please enter valid email address'"
-					placeholder="Staff Email"
-					class="forminput-light1 u-width-formsmall u-margin-top3x"></bg-formfield-text>
-				<br>
-
-				<div class="notification notification-warning notification-is-active" *ngIf="error">
-					<div class="notification-x-icon">
-
-						<svg>
-							<use xlink:href="/images/icons.svg#icon_priority_high"></use>
-						</svg>
-
-					</div>
-					<div class="notification-x-text">
-
-						<h2>Failed to add member!</h2>
-						<p>{{error}}</p>
-
-					</div>
+			<div class="tabbar">
+				<div
+					class="tab"
+					[class.tab-is-active]="currentTab === 'single'"
+					(click)="currentTab = 'single'"
+					type="button"
+				>
+					Einzeln
 				</div>
 
-				<div class="l-stack l-stack-buttons u-margin-top4x">
-					<button
-						class="button">Add Member</button>
-					<button
-						class="button button-secondary"
-						type="button"
-						(click)="$event.preventDefault(); closeDialog();">Cancel</button>
+				<div
+					class="tab"
+					[class.tab-is-active]="currentTab === 'bulk'"
+					(click)="currentTab = 'bulk'"
+					type="button"
+				>
+					Mehrfach
 				</div>
+			</div>
 
-			</form>
+			<!-- Drag or upload Badge -->
+
+			<div *ngIf="currentTab === 'single'" class="u-padding-all3x">
+				<h3 class="u-margin-bottom2x u-text-small-bold">Wähle die Rolle</h3>
+				<form [formGroup]="staffCreateForm.rawControl" (ngSubmit)="submitStaffCreate()">
+					<bg-formfield-radio
+						*ngFor="let role of issuerStaffRoleOptions; last as last"
+						[control]="staffCreateForm.rawControlMap.staffRole"
+						[name]="'staffRole'"
+						[label]="role.label"
+						[value]="role.value"
+						[sublabel]="role.description"
+						[last]="last"
+						[errorMessage]="'Please select a staff role'"
+					></bg-formfield-radio>
+					<bg-formfield-text
+						[control]="staffCreateForm.rawControlMap.staffEmail"
+						[label]="'Email Addresse des Mitgliedes'"
+						[errorMessage]="'Please enter valid email address'"
+						placeholder="Email Addresse"
+						class="forminput-light1 u-width-formsmall u-margin-top3x"
+					></bg-formfield-text>
+					<br />
+
+					<div class="notification notification-warning notification-is-active" *ngIf="error">
+						<div class="notification-x-icon">
+							<svg>
+								<use xlink:href="/images/icons.svg#icon_priority_high"></use>
+							</svg>
+						</div>
+						<div class="notification-x-text">
+							<h2>Hinzufügen des Mitgliedes ist fehlgeschlagen!</h2>
+							<p>{{ error }}</p>
+						</div>
+					</div>
+
+					<div class="l-stack l-stack-buttons u-margin-top4x">
+						<button class="button">Hinzufügen</button>
+						<button
+							class="button button-secondary"
+							type="button"
+							(click)="$event.preventDefault(); closeDialog()"
+						>
+							Abbrechen
+						</button>
+					</div>
+				</form>
+			</div>
+			<div *ngIf="currentTab === 'bulk' && issuer" class="u-padding-all3x">
+				<issuer-staff-create-bulk-import
+					*ngIf="viewState == 'import'"
+					(importPreviewDataEmitter)="onBulkIssueImportPreviewData($event)"
+					(updateStateEmitter)="updateViewState($event)"
+				>
+				</issuer-staff-create-bulk-import>
+
+				<issuer-staff-create-bulk-preview
+					*ngIf="viewState == 'importPreview'"
+					[importPreviewData]="importPreviewData"
+					(transformedImportDataEmitter)="onTransformedImportData($event)"
+					(updateStateEmitter)="updateViewState($event)"
+				>
+				</issuer-staff-create-bulk-preview>
+
+				<issuer-staff-create-bulk-confirmation
+					*ngIf="viewState == 'importConformation'"
+					[transformedImportData]="transformedImportData"
+					(updateStateEmitter)="updateViewState($event)"
+					[issuerSlug]="issuer.slug"
+				>
+				</issuer-staff-create-bulk-confirmation>
+
+				<issuer-staff-create-bulk-error
+					*ngIf="viewState == 'importError'"
+					[transformedImportData]="transformedImportData"
+					(updateStateEmitter)="updateViewState($event)"
+				>
+				</issuer-staff-create-bulk-error>
+			</div>
 		</div>
 	</div>
 </dialog>
